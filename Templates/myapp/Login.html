@@ -1,0 +1,60 @@
+<!-- {% extends 'index.html' %}
+
+{% block title %} Login {% endblock title %}
+{% block aboutactive %} active {% endblock aboutactive %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card animate__animated animate__fadeIn" style="background-color: #f8f9fa; border-radius: 15px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+        <div class="card-body">
+          <h5 class="card-title text-center">Login</h5>
+          <form id="loginForm" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="phoneNumber" class="form-label">Mobile Number</label>
+              <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required pattern="[0-9]{10}">
+              <div class="invalid-feedback">Phone number must have 10 digits</div>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add custom validation for phone number
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    var phoneNumberInput = document.getElementById('phoneNumber');
+    if (!phoneNumberInput.checkValidity()) {
+      phoneNumberInput.classList.add('is-invalid');
+      event.preventDefault();
+    }
+  });
+</script>
+
+{% endblock body %} -->
+
+
+{% extends 'index.html' %}
+
+{% block title %} Login {% endblock title %}
+
+{% load crispy_forms_tags %} 
+
+{% block body %}
+<form method="post">
+  {% csrf_token %} {{form|crispy}}
+  <p>Don't have an account? Create One <a href="/signup">Here</a>!</p>
+  <button type="submit" class="btn-btn-success">Login</button>
+
+{% endblock body %} 

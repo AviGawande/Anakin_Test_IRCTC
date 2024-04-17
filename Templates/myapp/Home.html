@@ -1,0 +1,124 @@
+{% extends 'index.html' %}
+
+{% block title %}Railway Management System{% endblock title %}
+{% block homeactive %} active {% endblock homeactive %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-center">Welcome to Railway Management System</h5>
+          <form id="searchForm">
+            <div class="mb-3">
+              <label for="source" class="form-label">Source</label>
+              <input type="text" class="form-control" id="source" name="source" required>
+            </div>
+            <div class="mb-3">
+              <label for="destination" class="form-label">Destination</label>
+              <input type="text" class="form-control" id="destination" name="destination" required>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Search Trains</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div id="searchResults" style="display: none;">
+        <h5 class="text-center mb-3">Available Trains</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Train Name</th>
+              <th scope="col">Source</th>
+              <th scope="col">Destination</th>
+              <th scope="col">Available Seats</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody id="trainList">
+            <!-- Train details will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if user.is_authenticated and user.is_admin %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-center">Admin Actions</h5>
+          <div class="text-center">
+            <a href="{% url 'add_train' %}" class="btn btn-primary">Add Train</a>
+            <a href="{% url 'update_routes' %}" class="btn btn-primary">Update Routes</a>
+            <a href="{% url 'update_seats' %}" class="btn btn-primary">Update Seats</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+  // Dummy data for demonstration
+  var dummyData = [
+    { id: 1, trainName: 'Express 123', source: 'City A', destination: 'City B', availableSeats: 50 },
+    { id: 2, trainName: 'Fast 456', source: 'City B', destination: 'City C', availableSeats: 30 },
+    { id: 3, trainName: 'Local 789', source: 'City C', destination: 'City D', availableSeats: 20 },
+  ];
+
+  // Function to display search results
+  function displaySearchResults(data) {
+    var trainList = document.getElementById('trainList');
+    trainList.innerHTML = '';
+    data.forEach(function(train) {
+      var row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${train.trainName}</td>
+        <td>${train.source}</td>
+        <td>${train.destination}</td>
+        <td>${train.availableSeats}</td>
+        <td>
+          {% if user.is_authenticated %}
+            <button class="btn btn-success" onclick="bookTicket(${train.id})">Book Now</button>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary">Login to Book</a>
+          {% endif %}
+        </td>
+      `;
+      trainList.appendChild(row);
+    });
+    document.getElementById('searchResults').style.display = 'block';
+  }
+
+  // Function to handle form submission
+  document.getElementById('searchForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var source = document.getElementById('source').value;
+    var destination = document.getElementById('destination').value;
+    // Here you can make an AJAX request to fetch train availability based on source and destination
+    // For demonstration, using dummy data
+    displaySearchResults(dummyData);
+  });
+
+  // Dummy function to book ticket
+  function bookTicket(trainId) {
+    // Here you can handle the booking process
+    alert(`Booking ticket for train with ID: ${trainId}`);
+  }
+</script>
+
+{% endblock body %}
